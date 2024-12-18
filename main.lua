@@ -130,8 +130,15 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
     print((GivenDivisor or 0))
     local Decimal = Number - math.floor(Number)
     local Denominator = 1; if GivenDivisor ~= nil then Denominator = Denominator + GivenDivisor end
-    local Numerator = Decimal * Denominator
-    print(Numerator, Denominator)
+    local Numerator = tonumber(Decimal * Denominator)
+    local function RepeatInDirectionToRoundNumber(Direction, Precision, Number)
+      
+    end
+    local function Round(Number)
+      local Floor = RepeatInDirectionToExactNumber(-1, Places + 2, Number)
+      local Ceil = RepeatInDirectionToExactNumber(-1, Places + 2, Number)
+      local xxx
+    end
     if math.abs(Numerator - math.round(Numerator)) < Difference then
       return {Numerator, Denominator}
     else
