@@ -124,13 +124,14 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
     end
   end
   
-  function GetNumberNumeratorAndDenomonator(Number, GivenDivisor)
+  function GetNumberNumeratorAndDenominator(Number, GivenDivisor)
     local Places = 5
     local Difference = 10 ^ (0 - Places)
-    local WholeNumber = (Number - math.floor(Number))
-    local Decimal = Number - WholeNumber
-    local Denominator = (GivenDivisor or 0) + 1
+    print((GivenDivisor or 0))
+    local Decimal = Number - math.floor(Number)
+    local Denominator = 1; if GivenDivisor ~= nil then Denominator = Denominator + GivenDivisor end
     local Numerator = Decimal * Denominator
+    print(Numerator, Denominator)
     if math.abs(Numerator - math.round(Numerator)) < Difference then
       return {Numerator, Denominator}
     else
@@ -140,7 +141,7 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
   
   local function FindNumberInATable(Number, Table)
     for _, DirectFromTableNumber in ipairs(Table) do
-      if GetNumberNumeratorAndDenomonatorValue == DirectFromTableNumber then
+      if GetNumberNumeratorAndDenominator(Number) == GetNumberNumeratorAndDenominator(DirectFromTableNumber) then
         return true
       end
     end
