@@ -200,7 +200,8 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
     return NewTable
   end
   
-  return SortIPairsTable(RemoveAllDuplicateNumbersFromATable(Layer(NumbersToUse, DesiredNumber)))
+  local AllSolutions = SortIPairsTable(RemoveAllDuplicateNumbersFromATable(Layer(NumbersToUse, DesiredNumber)))
+  return AllSolutions
 end
 
 print(GetAllSolutions({2, 2, 2, 3}))
