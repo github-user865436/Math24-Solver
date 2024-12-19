@@ -14,13 +14,13 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
               local NumberA, NumberB = UnusedNumberA - 1, UnusedNumberB - 1
               local EncryptedUsedNumbers = tostring(math.min(NumberA, NumberB))..tostring(math.max(NumberB, NumberA))
               if NumberA ~= NumberB then
-                local Add = CurrentNumbers[NumberA] + CurrentNumbers[NumberB]
-                local Subtract = CurrentNumbers[NumberA] - CurrentNumbers[NumberB]
-                local Multi = CurrentNumbers[NumberA] * CurrentNumbers[NumberB]
-                local Divide = CurrentNumbers[NumberA] / CurrentNumbers[NumberB]
+                local Add = {CurrentNumbers[NumberA][1] * CurrentNumbers[NumberB][2] + CurrentNumbers[NumberA][2] * CurrentNumbers[NumberB][1], CurrentNumbers[NumberA][2] * CurrentNumbers[NumberB][2]}
+                local Subtract = {CurrentNumbers[NumberA][1] * CurrentNumbers[NumberB][2] - CurrentNumbers[NumberA][2] * CurrentNumbers[NumberB][1], CurrentNumbers[NumberA][2] * CurrentNumbers[NumberB][2]}
+                local Multi = {CurrentNumbers[NumberA][1] * CurrentNumbers[NumberB][1], CurrentNumbers[NumberA][2] * CurrentNumbers[NumberB][2]}
+                local Divide = {CurrentNumbers[NumberA][1] * CurrentNumbers[NumberB][2], CurrentNumbers[NumberA][2] * CurrentNumbers[NumberB][1]}
                 local function AddNumber(Number)
                   local FollowRule = true
-                  if not FollowRule or Number >= 0 then
+                  if not FollowRule or Number[1] / Number[2] >= 0 then
                     table.insert(PlaceHolders[EncryptedUsedNumbers], Number)
                   end
                 end
@@ -104,10 +104,10 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
       local Nums = {}
       for _, NumberPairs in ipairs(NewNumbers) do
         local Unpacked
-        if not Steps then
-          Unpacked = nil
-        else
+        if Steps then
           Unpacked = table.unpack(Steps)
+        else
+          Unpacked = nil
         end
         
         local RedoFunctionToFindNumbers = Layer(NumberPairs, NumberToFind, {Unpacked, CurrentNumbers})
@@ -135,22 +135,9 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
     end
   end
   
-  function GetNumberNumeratorAndDenominator(Number, GivenDivisor)
-    local Places = 5
-    local Denominator = 1; --if GivenDivisor ~= nil then Denominator = Denominator + GivenDivisor end
-    local Numerator = tonumber(Denominator * Number - Denominator * math.floor(Number))
-    if math.abs(Numerator - Round(Numerator)) < 10 ^ (0 - Places) then
-      return {Numerator, Denominator}
-    else
-      return GetNumberNumeratorAndDenominator(Number, Denominator)
-    end
-  end  
-  
   local function FindNumberInATable(Number, Table)
     for _, DirectFromTableNumber in ipairs(Table) do
-      local Table1 = GetNumberNumeratorAndDenominator(Number)
-      local Table2 = GetNumberNumeratorAndDenominator(DirectFromTableNumber)
-      if Table1[1] == Table2[1] and Table1[2] == Table2[2]
+      if Number[1] / Number[2] == DirectFromTableNumber[1] / DirectFromTableNumber[2] then
         return true
       end
     end
@@ -182,7 +169,7 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
 
     local LowestValue
     for _, Value in ipairs(Table) do
-      if not LowestValue or Value < LowestValue then
+      if not LowestValue or Value[1] / Value[2] < LowestValue[1] / LowestValue[2] then
         LowestValue = Value
       end
     end
@@ -210,8 +197,14 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
     return NewTable
   end
   
-  local AllSolutions = SortIPairsTable(RemoveAllDuplicateNumbersFromATable(Layer(NumbersToUse, DesiredNumber)))
-  return AllSolutions
+  local AllSolutions = Layer(NumbersToUse, DesiredNumber)
+  
+  local NowAllSolutions = {}
+  for Index, Value in ipairs(AllSolutions) do
+    table.insert(NowAllSolutions, Value[1] / Value[2])
+  end
+  
+  return SortIPairsTable(RemoveAllDuplicateNumbersFromATable(NowAllSolutions))
 end
 
-print(table.unpack(GetAllSolutions({2, 2, 2, 3})))
+print(table.unpack(GetAllSolutions({{2, 1}, {2, 1}, {2, 1}, {3, 1}})))
