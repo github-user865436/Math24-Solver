@@ -138,7 +138,7 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
   function GetNumberNumeratorAndDenominator(Number, GivenDivisor)
     local Places = 5
     local Denominator = 1; --if GivenDivisor ~= nil then Denominator = Denominator + GivenDivisor end
-    local Numerator = tonumber(Number * Denominator - Number * math.floor(Number))
+    local Numerator = tonumber(Denominator * Number - Denominator * math.floor(Number))
     if math.abs(Numerator - Round(Numerator)) < 10 ^ (0 - Places) then
       return {Numerator, Denominator}
     else
@@ -148,7 +148,9 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
   
   local function FindNumberInATable(Number, Table)
     for _, DirectFromTableNumber in ipairs(Table) do
-      if GetNumberNumeratorAndDenominator(Number) == GetNumberNumeratorAndDenominator(DirectFromTableNumber) then
+      local Table1 = GetNumberNumeratorAndDenominator(Number)
+      local Table2 = GetNumberNumeratorAndDenominator(DirectFromTableNumber)
+      if Table1[1] == Table2[1] and Table1[2] == Table2[2]
         return true
       end
     end
@@ -212,4 +214,4 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
   return AllSolutions
 end
 
-print(GetAllSolutions({2, 2, 2, 3}))
+print(table.unpack(GetAllSolutions({2, 2, 2, 3})))
