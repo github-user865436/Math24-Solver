@@ -157,10 +157,12 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
       local Floor = RepeatInDirectionToRoundNumber(-1, Places + 2, Number)
       local Ceil = RepeatInDirectionToRoundNumber(-1, Places + 2, Number)
 
-      if Number - Floor > Ceil - Number then
-        return Floor
-      else
-        return Ceil
+      if Floor ~= nil and Ceil ~= nil then
+        if Number - Floor > Ceil - Number then
+          return Floor
+        else
+          return Ceil
+        end
       end
     end
     if math.abs(Numerator - Round(Numerator)) < Difference then
