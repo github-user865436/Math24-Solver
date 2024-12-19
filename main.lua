@@ -123,52 +123,26 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
       return CurrentNumbers
     end
   end
+
+  local function Round(Number)
+    local Floor = math.floor(Number)
+    local Ceil = math.ceil(Number)
+
+    if Number - Floor > Ceil - Number then
+      return Floor
+    else
+      return Ceil
+    end
+  end
   
   function GetNumberNumeratorAndDenominator(Number, GivenDivisor)
     local Places = 5
-    local Difference = 10 ^ (0 - Places)
-    print((GivenDivisor or 0))
-    local Decimal = Number - math.floor(Number)
-    local Denominator = 1; if GivenDivisor ~= nil then Denominator = Denominator + GivenDivisor end
-    local Numerator = tonumber(Decimal * Denominator)
-    local function RepeatInDirectionToRoundNumber(Direction, Precision, Number)
-      local RoundedNumber = Number
-      local function CheckIfTooFar(NumberToCheck)
-        local StringOfNumber = tostring(NumberToCheck)
-        local CurrentString = ""
-        local ContinueWriting = true
-        for CharacterHash = 1, #StringOfNumber do
-          local Character = string.sub(StringOfNumber, CharacterHash, CharacterHash)
-          if Character == "." then
-            ContinueWriting = false
-          elseif ContinueWriting then
-            CurrentString = CurrentString .. Character
-          end
-        end
-      end
-      for CurrentPlace = 1, Precision do
-        local NewRoundedNumber = RoundedNumber + Direction * 10 ^ (0 - Precision)
-        if CheckIfTooFar(NewRoundedNumber) ~= CheckIfTooFar(RoundedNumber) then
-          RoundedNumber = NewRoundedNumber
-        end
-      end
-    end
-    local function Round(Number)
-      local Floor = RepeatInDirectionToRoundNumber(-1, Places + 2, Number)
-      local Ceil = RepeatInDirectionToRoundNumber(-1, Places + 2, Number)
-
-      if Floor ~= nil and Ceil ~= nil then
-        if Number - Floor > Ceil - Number then
-          return Floor
-        else
-          return Ceil
-        end
-      end
-    end
-    if math.abs(Numerator - Round(Numerator)) < Difference then
+    local Denominator = 1; --if GivenDivisor ~= nil then Denominator = Denominator + GivenDivisor end
+    local Numerator = tonumber(Number * Denominator - Number * math.floor(Number))
+    if math.abs(Numerator - Round(Numerator)) < 10 ^ (0 - Places) then
       return {Numerator, Denominator}
     else
-      return GetNumberNumeratorAndDenomonator(Number, Denominator)
+      return GetNumberNumeratorAndDenominator(Number, Denominator)
     end
   end  
   
