@@ -137,7 +137,7 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
   
   local function FindNumberInATable(Number, Table)
     for _, DirectFromTableNumber in ipairs(Table) do
-      if Number[1] / Number[2] == DirectFromTableNumber[1] / DirectFromTableNumber[2] then
+      if Number == DirectFromTableNumber then
         return true
       end
     end
@@ -169,7 +169,7 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
 
     local LowestValue
     for _, Value in ipairs(Table) do
-      if not LowestValue or Value[1] / Value[2] < LowestValue[1] / LowestValue[2] then
+      if not LowestValue or Value < LowestValue then
         LowestValue = Value
       end
     end
@@ -203,8 +203,15 @@ local function GetAllSolutions(NumbersToUse, UnusedDesiredNumber)
   for Index, Value in ipairs(AllSolutions) do
     table.insert(NowAllSolutions, Value[1] / Value[2])
   end
+  NowAllSolutions = SortIPairsTable(RemoveAllDuplicateNumbersFromATable(NowAllSolutions))
   
-  return SortIPairsTable(RemoveAllDuplicateNumbersFromATable(NowAllSolutions))
+  for Index, Value in ipairs(NowAllSolutions) do
+    if math.floor(Value * 10) == Value * 10 then
+            
+    end
+  end
+  
+  return NowAllSolutions
 end
 
 print(table.unpack(GetAllSolutions({{2, 1}, {2, 1}, {2, 1}, {3, 1}})))
